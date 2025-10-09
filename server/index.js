@@ -4,7 +4,8 @@ const dotenv = require('dotenv');
 const path = require('path');
 
 // Load environment variables
-dotenv.config();
+dotenv.config({ path: '.env.local' });
+dotenv.config(); // Fallback to .env if .env.local doesn't exist
 
 const app = express();
 const PORT = process.env.PORT || 3001;
