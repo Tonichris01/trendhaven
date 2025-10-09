@@ -101,9 +101,12 @@ export async function getCurrentUser() {
     const data = await apiRequest('/auth/me')
     return data.user
   } catch (error) {
-    // Token is invalid, clear it
-    localStorage.removeItem('authToken')
-    localStorage.removeItem('user')
+    // Only clear token if it's a 401/403 error (invalid token)
+    // Don't clear on network errors or other issues
+    if (error.message.includes('401') || error.message.includes('403') || error.message.includes('Unauthorized')) {
+      localStorage.removeItem('authToken')
+      localStorage.removeItem('user')
+    }
     return null
   }
 }

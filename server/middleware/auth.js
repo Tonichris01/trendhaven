@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const { supabase } = require('../config/supabase');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-only';
+// Use a consistent JWT secret for both local and production
+const JWT_SECRET = process.env.JWT_SECRET || 'trendhaven-jwt-secret-key-2024';
 
 // Middleware to verify JWT token
 const authenticateToken = async (req, res, next) => {
