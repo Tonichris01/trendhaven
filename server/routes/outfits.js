@@ -38,6 +38,10 @@ const upload = multer({
 // Analyze outfit with AI
 async function analyzeOutfit(imagePath) {
   try {
+    if (!openai) {
+      throw new Error('OpenAI API key not configured. AI analysis is not available.');
+    }
+
     // Convert image to base64 for OpenAI
     const imageBuffer = fs.readFileSync(imagePath);
     const base64Image = imageBuffer.toString('base64');
@@ -210,6 +214,14 @@ router.post('/recommendations', authenticateToken, async (req, res) => {
     }
 
     // Use AI to recommend outfits
+    if (!openai) {
+      // Fallback: return top-rated outfits if AI is not available
+      const recommendations = outfits
+        .sort((a, b) => b.rating - a.rating)
+        .slice(0, 3);
+      return res.json({ recommendations });
+    }
+
     const prompt = `Based on the following context, recommend the best 3 outfits from the user's wardrobe:
     
     Context:

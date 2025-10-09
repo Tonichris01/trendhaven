@@ -1,7 +1,7 @@
 const { createClient } = require('@supabase/supabase-js');
 
-const supabaseUrl = process.env.SUPABASE_URL || 'https://placeholder.supabase.co';
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-key';
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 // Debug logging
 console.log('🔍 Environment check:');
@@ -20,11 +20,9 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey, {
 
 // Check if we have real credentials
 const hasRealCredentials = supabaseUrl && 
-                          supabaseUrl !== 'https://placeholder.supabase.co' && 
                           supabaseServiceKey && 
-                          supabaseServiceKey !== 'placeholder-key' &&
                           supabaseUrl.includes('supabase.co') &&
-                          supabaseServiceKey.length > 100; // JWT tokens are typically long
+                          supabaseServiceKey.length > 50; // JWT tokens are typically long
 
 if (!hasRealCredentials) {
   console.warn('⚠️  WARNING: Using placeholder Supabase credentials. Please set up your Supabase project and update the environment variables.');

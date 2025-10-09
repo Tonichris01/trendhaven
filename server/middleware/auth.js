@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const { supabase } = require('../config/supabase');
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-for-development-only';
 
 // Middleware to verify JWT token
 const authenticateToken = async (req, res, next) => {
