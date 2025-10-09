@@ -112,14 +112,23 @@ export function onAuthStateChange(callback: (user: any) => void) {
       callback(e.newValue ? JSON.parse(e.newValue) : null)
     }
   }
-  
+
+  // Listen for custom auth state change events (for same-tab changes)
+  const handleAuthStateChange = (e: CustomEvent) => {
+    callback(e.detail)
+  }
+
   window.addEventListener('storage', handleStorageChange)
-  
+  window.addEventListener('authStateChange', handleAuthStateChange as EventListener)
+
   // Return cleanup function
   return {
     data: {
       subscription: {
-        unsubscribe: () => window.removeEventListener('storage', handleStorageChange)
+        unsubscribe: () => {
+          window.removeEventListener('storage', handleStorageChange)
+          window.removeEventListener('authStateChange', handleAuthStateChange as EventListener)
+        }
       }
     }
   }
