@@ -7,16 +7,20 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 console.log('🔍 Environment check:');
 console.log('SUPABASE_URL:', supabaseUrl ? 'Set' : 'Not set');
 console.log('SUPABASE_SERVICE_ROLE_KEY:', supabaseServiceKey ? 'Set' : 'Not set');
-console.log('URL contains supabase.co:', supabaseUrl.includes('supabase.co'));
-console.log('Key starts with eyJ:', supabaseServiceKey.startsWith('eyJ'));
+console.log('URL contains supabase.co:', supabaseUrl ? supabaseUrl.includes('supabase.co') : false);
+console.log('Key starts with eyJ:', supabaseServiceKey ? supabaseServiceKey.startsWith('eyJ') : false);
 
 // Create Supabase client with service role key for server-side operations
-const supabase = createClient(supabaseUrl, supabaseServiceKey, {
-  auth: {
-    autoRefreshToken: false,
-    persistSession: false
+const supabase = createClient(
+  supabaseUrl || 'https://placeholder.supabase.co', 
+  supabaseServiceKey || 'placeholder-key', 
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
   }
-});
+);
 
 // Check if we have real credentials
 const hasRealCredentials = supabaseUrl && 
