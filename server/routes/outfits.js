@@ -2,7 +2,7 @@ const express = require('express');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const supabase = require('../config/supabase');
+const { supabase } = require('../config/supabase');
 const openai = require('../config/openai');
 const { authenticateToken } = require('../middleware/auth');
 
@@ -116,8 +116,11 @@ router.post('/upload', authenticateToken, upload.single('image'), async (req, re
     const analysis = await analyzeOutfit(imagePath);
 
     // Upload image to Supabase Storage (you'll need to set this up)
-    // For now, we'll store the local path
-    const imageUrl = `/uploads/${req.file.filename}`;
+    // For now, we'll store the local path with full URL
+    const baseUrl = process.env.NODE_ENV === 'production' 
+      ? 'https://trendhaven-phi.vercel.app' 
+      : 'http://localhost:3001';
+    const imageUrl = `${baseUrl}/uploads/${req.file.filename}`;
 
     // Save outfit to database
     const { data, error } = await supabase

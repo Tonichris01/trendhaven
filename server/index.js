@@ -19,6 +19,9 @@ if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../dist')));
 }
 
+// Serve uploaded images
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // Import routes
 const authRoutes = require('./routes/auth');
 const outfitRoutes = require('./routes/outfits');
