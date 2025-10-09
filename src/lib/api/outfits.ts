@@ -102,13 +102,20 @@ export async function createOutfit(params: CreateOutfitParams & { image: File })
 
 // Get user's outfits
 export async function getUserOutfits(params: GetOutfitsParams = {}): Promise<Outfit[]> {
-  const queryParams = new URLSearchParams()
-  if (params.category) {
-    queryParams.append('category', params.category)
-  }
+  try {
+    console.log('🔍 Fetching outfits with params:', params)
+    const queryParams = new URLSearchParams()
+    if (params.category) {
+      queryParams.append('category', params.category)
+    }
 
-  const data = await apiRequest(`/outfits?${queryParams.toString()}`)
-  return data.outfits || []
+    const data = await apiRequest(`/outfits?${queryParams.toString()}`)
+    console.log('✅ Outfits API response:', data)
+    return data.outfits || []
+  } catch (error) {
+    console.error('❌ Error fetching outfits:', error)
+    throw error
+  }
 }
 
 // Get outfit recommendations
