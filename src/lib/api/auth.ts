@@ -30,12 +30,14 @@ export async function signInAnonymously() {
   const data = await apiRequest('/auth/signin-anonymous', {
     method: 'POST'
   })
-  
+
   if (data.token) {
     localStorage.setItem('authToken', data.token)
     localStorage.setItem('user', JSON.stringify(data.user))
+    // Dispatch custom event to notify auth state change
+    window.dispatchEvent(new CustomEvent('authStateChange', { detail: data.user }))
   }
-  
+
   return data
 }
 
@@ -45,12 +47,14 @@ export async function signInWithEmail(email: string, password: string) {
     method: 'POST',
     body: JSON.stringify({ email, password })
   })
-  
+
   if (data.token) {
     localStorage.setItem('authToken', data.token)
     localStorage.setItem('user', JSON.stringify(data.user))
+    // Dispatch custom event to notify auth state change
+    window.dispatchEvent(new CustomEvent('authStateChange', { detail: data.user }))
   }
-  
+
   return data
 }
 
@@ -60,12 +64,14 @@ export async function signUpWithEmail(email: string, password: string) {
     method: 'POST',
     body: JSON.stringify({ email, password })
   })
-  
+
   if (data.token) {
     localStorage.setItem('authToken', data.token)
     localStorage.setItem('user', JSON.stringify(data.user))
+    // Dispatch custom event to notify auth state change
+    window.dispatchEvent(new CustomEvent('authStateChange', { detail: data.user }))
   }
-  
+
   return data
 }
 
@@ -78,6 +84,8 @@ export async function signOut() {
   } finally {
     localStorage.removeItem('authToken')
     localStorage.removeItem('user')
+    // Dispatch custom event to notify auth state change
+    window.dispatchEvent(new CustomEvent('authStateChange', { detail: null }))
   }
 }
 
