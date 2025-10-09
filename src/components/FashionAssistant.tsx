@@ -4,6 +4,7 @@ import { OutfitUpload } from "./OutfitUpload";
 import { WardrobeGrid } from "./WardrobeGrid";
 import { RecommendationPanel } from "./RecommendationPanel";
 import { getUserOutfits, type Outfit } from "../lib/api/outfits";
+import { getCurrentUser } from "../lib/api/auth";
 
 type Tab = "upload" | "wardrobe" | "recommendations";
 
@@ -13,23 +14,29 @@ export function FashionAssistant() {
   const [outfits, setOutfits] = useState<Outfit[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchOutfits = async () => {
-      try {
-        setLoading(true);
-        const data = await getUserOutfits({
-          category: selectedCategory === "all" ? undefined : selectedCategory as any
-        });
-        setOutfits(data);
-      } catch (error) {
-        console.error('Failed to fetch outfits:', error);
-        toast.error('Failed to load outfits');
-      } finally {
-        setLoading(false);
+  const refreshOutfits = async () => {
+    try {
+      setLoading(true);
+      const currentUser = await getCurrentUser();
+      if (!currentUser) {
+        setOutfits([]);
+        return;
       }
-    };
+      
+      const data = await getUserOutfits({
+        category: selectedCategory === "all" ? undefined : selectedCategory as any
+      });
+      setOutfits(data);
+    } catch (error) {
+      console.error('Failed to refresh outfits:', error);
+      toast.error('Failed to refresh outfits');
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    fetchOutfits();
+  useEffect(() => {
+    refreshOutfits();
   }, [selectedCategory]);
 
   const tabs = [
@@ -70,7 +77,7 @@ export function FashionAssistant() {
 
       {/* Tab Content */}
       <div className="min-h-[60vh]">
-        {activeTab === "upload" && <OutfitUpload />}
+        {activeTab === "upload" && <OutfitUpload onUploadSuccess={refreshOutfits} />}
         
         {activeTab === "wardrobe" && (
           <div className="space-y-6">

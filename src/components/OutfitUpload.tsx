@@ -2,7 +2,11 @@ import { useState, useRef } from "react";
 import { toast } from "sonner";
 import { createOutfit } from "../lib/api/outfits";
 
-export function OutfitUpload() {
+interface OutfitUploadProps {
+  onUploadSuccess?: () => void;
+}
+
+export function OutfitUpload({ onUploadSuccess }: OutfitUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [mood, setMood] = useState("");
   const [occasion, setOccasion] = useState("");
@@ -36,6 +40,9 @@ export function OutfitUpload() {
         `Outfit analyzed! Rating: ${outfit.rating}/10`,
         { id: "analysis" }
       );
+
+      // Refresh the wardrobe
+      onUploadSuccess?.();
 
       // Reset form
       setMood("");

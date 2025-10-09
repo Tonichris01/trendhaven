@@ -111,7 +111,7 @@ function Content() {
           </div>
         </div>
       ) : (
-        <FashionAssistant />
+        <FashionAssistant key={user?.id} />
       )}
     </div>
   );
