@@ -17,18 +17,25 @@ export function FashionAssistant() {
   const refreshOutfits = async () => {
     try {
       setLoading(true);
+      console.log('🔄 Refreshing outfits...');
+      
       const currentUser = await getCurrentUser();
+      console.log('👤 Current user:', currentUser);
+      
       if (!currentUser) {
+        console.log('❌ No current user, clearing outfits');
         setOutfits([]);
         return;
       }
       
+      console.log('📡 Calling getUserOutfits...');
       const data = await getUserOutfits({
         category: selectedCategory === "all" ? undefined : selectedCategory as any
       });
+      console.log('✅ Got outfits data:', data);
       setOutfits(data);
     } catch (error) {
-      console.error('Failed to refresh outfits:', error);
+      console.error('❌ Failed to refresh outfits:', error);
       toast.error('Failed to refresh outfits');
     } finally {
       setLoading(false);
