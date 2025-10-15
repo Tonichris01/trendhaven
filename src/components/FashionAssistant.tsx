@@ -39,6 +39,13 @@ export function FashionAssistant() {
     refreshOutfits();
   }, [selectedCategory]);
 
+  // Refresh outfits when switching to wardrobe tab
+  useEffect(() => {
+    if (activeTab === "wardrobe") {
+      refreshOutfits();
+    }
+  }, [activeTab]);
+
   const tabs = [
     { id: "upload" as Tab, label: "Upload Outfit", icon: "📸" },
     { id: "wardrobe" as Tab, label: "Smart Wardrobe", icon: "👗" },
