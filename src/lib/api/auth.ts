@@ -101,9 +101,14 @@ export async function getCurrentUser() {
     const data = await apiRequest('/auth/me')
     return data.user
   } catch (error) {
-    // Only clear token if it's a 401/403 error (invalid token)
-    // Don't clear on network errors or other issues
-    if (error.message.includes('401') || error.message.includes('403') || error.message.includes('Unauthorized')) {
+    // Only clear token if it's an authentication error
+    // Check for various forms of auth errors
+    const errorMessage = error instanceof Error ? error.message : String(error)
+    if (errorMessage.includes('401') || 
+        errorMessage.includes('403') || 
+        errorMessage.includes('Unauthorized') ||
+        errorMessage.includes('Access token required') ||
+        errorMessage.includes('Invalid or expired token')) {
       localStorage.removeItem('authToken')
       localStorage.removeItem('user')
     }
