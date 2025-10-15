@@ -92,15 +92,20 @@ export async function signOut() {
 // Get current user
 export async function getCurrentUser() {
   const token = localStorage.getItem('authToken')
+  console.log('🔑 Token from localStorage:', token ? 'Present' : 'Missing')
   
   if (!token) {
+    console.log('❌ No token found in localStorage')
     return null
   }
   
   try {
+    console.log('📡 Calling /auth/me endpoint...')
     const data = await apiRequest('/auth/me')
+    console.log('✅ /auth/me response:', data)
     return data.user
   } catch (error) {
+    console.log('❌ /auth/me failed:', error)
     // Only clear token if it's an authentication error
     // Check for various forms of auth errors
     const errorMessage = error instanceof Error ? error.message : String(error)
@@ -109,6 +114,7 @@ export async function getCurrentUser() {
         errorMessage.includes('Unauthorized') ||
         errorMessage.includes('Access token required') ||
         errorMessage.includes('Invalid or expired token')) {
+      console.log('🧹 Clearing token due to auth error')
       localStorage.removeItem('authToken')
       localStorage.removeItem('user')
     }
